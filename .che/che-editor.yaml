@@ -1,0 +1,43 @@
+inline:
+  schemaVersion: 2.1.0
+  metadata:
+    name: theia-ide
+  components:
+    - name: theia-ide
+      container:
+        image: 'theiacloud/theia-cloud-demo'
+        env:
+          - name: THEIA_PLUGINS
+            value: 'local-dir:///plugins'
+          - name: HOSTED_PLUGIN_HOSTNAME
+            value: 0.0.0.0
+          - name: THEIA_HOST
+            value: 0.0.0.0
+        volumeMounts:
+          - name: plugins
+            path: /plugins
+          - name: theia-local
+            path: /home/theia/.theia
+        mountSources: true
+        memoryLimit: 1200M
+        memoryRequest: 1000M
+        cpuLimit: '2'
+        cpuRequest: 100m
+        endpoints:
+          - name: theia
+            attributes:
+              type: main
+              cookiesAuthEnabled: true
+              discoverable: false
+              urlRewriteSupported: true
+            targetPort: 3000
+            exposure: public
+            secure: false
+            protocol: https
+      attributes:
+        app.kubernetes.io/component: che-theia
+        app.kubernetes.io/part-of: che-theia.eclipse.org
+    - name: plugins
+      volume: {}
+    - name: theia-local
+      volume: {}
